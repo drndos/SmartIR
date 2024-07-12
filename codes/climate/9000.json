@@ -8,7 +8,6 @@
   "minTemperature": 17,
   "maxTemperature": 30,
   "precision": 1,
-  "delay": 0.3,
   "operationModes": [
     "auto",
     "cool",

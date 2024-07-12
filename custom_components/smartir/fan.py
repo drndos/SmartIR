@@ -8,7 +8,7 @@ import voluptuous as vol
 from homeassistant.components.fan import (
     FanEntity, PLATFORM_SCHEMA,
     DIRECTION_REVERSE, DIRECTION_FORWARD,
-    SUPPORT_SET_SPEED, SUPPORT_DIRECTION, SUPPORT_OSCILLATE, 
+    SUPPORT_SET_SPEED, SUPPORT_DIRECTION, SUPPORT_OSCILLATE,
     ATTR_OSCILLATING)
 from homeassistant.const import (
     CONF_NAME, STATE_OFF, STATE_ON, STATE_UNKNOWN)
@@ -63,7 +63,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
         try:
             codes_source = ("https://raw.githubusercontent.com/"
-                            "smartHomeHub/SmartIR/master/"
+                            "drndos/SmartIR/master/"
                             "codes/fan/{}.json")
 
             await Helper.downloader(codes_source.format(device_code), device_json_path)
@@ -101,7 +101,7 @@ class SmartIRFan(FanEntity, RestoreEntity):
         self._commands_encoding = device_data['commandsEncoding']
         self._speed_list = device_data['speed']
         self._commands = device_data['commands']
-        
+
         self._speed = SPEED_OFF
         self._direction = None
         self._last_on_speed = None
@@ -125,7 +125,7 @@ class SmartIRFan(FanEntity, RestoreEntity):
         #Init the IR/RF controller
         self._controller = get_controller(
             self.hass,
-            self._supported_controller, 
+            self._supported_controller,
             self._commands_encoding,
             self._controller_data,
             self._delay)
@@ -133,14 +133,14 @@ class SmartIRFan(FanEntity, RestoreEntity):
     async def async_added_to_hass(self):
         """Run when entity about to be added."""
         await super().async_added_to_hass()
-    
+
         last_state = await self.async_get_last_state()
 
         if last_state is not None:
             if 'speed' in last_state.attributes:
                 self._speed = last_state.attributes['speed']
 
-            #If _direction has a value the direction controls appears 
+            #If _direction has a value the direction controls appears
             #in UI even if SUPPORT_DIRECTION is not provided in the flags
             if ('direction' in last_state.attributes and \
                 self._support_flags & SUPPORT_DIRECTION):
@@ -150,7 +150,7 @@ class SmartIRFan(FanEntity, RestoreEntity):
                 self._last_on_speed = last_state.attributes['last_on_speed']
 
             if self._power_sensor:
-                async_track_state_change(self.hass, self._power_sensor, 
+                async_track_state_change(self.hass, self._power_sensor,
                                          self._async_power_sensor_changed)
 
     @property
@@ -270,7 +270,7 @@ class SmartIRFan(FanEntity, RestoreEntity):
             elif oscillating:
                 command = self._commands['oscillate']
             else:
-                command = self._commands[direction][speed] 
+                command = self._commands[direction][speed]
 
             try:
                 await self._controller.send(command)

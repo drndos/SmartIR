@@ -22,11 +22,11 @@ DOMAIN = 'smartir'
 VERSION = '1.17.9'
 MANIFEST_URL = (
     "https://raw.githubusercontent.com/"
-    "smartHomeHub/SmartIR/{}/"
+    "drndos/SmartIR/{}/"
     "custom_components/smartir/manifest.json")
 REMOTE_BASE_URL = (
     "https://raw.githubusercontent.com/"
-    "smartHomeHub/SmartIR/{}/"
+    "drndos/SmartIR/{}/"
     "custom_components/smartir/")
 COMPONENT_ABS_DIR = os.path.dirname(
     os.path.abspath(__file__))
@@ -71,7 +71,7 @@ async def _update(hass, branch, do_update=False, notify_if_latest=True):
         async with aiohttp.ClientSession() as session:
             async with session.get(MANIFEST_URL.format(branch)) as response:
                 if response.status == 200:
-                    
+
                     data = await response.json(content_type='text/plain')
                     min_ha_version = data['homeassistant']
                     last_version = data['updater']['version']
@@ -80,7 +80,7 @@ async def _update(hass, branch, do_update=False, notify_if_latest=True):
                     if StrictVersion(last_version) <= StrictVersion(VERSION):
                         if notify_if_latest:
                             hass.components.persistent_notification.async_create(
-                                "You're already using the latest version!", 
+                                "You're already using the latest version!",
                                 title='SmartIR')
                         return
 
